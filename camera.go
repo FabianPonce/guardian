@@ -1,12 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"github.com/blackjack/webcam"
-	"image/jpeg"
-	"log"
 )
 
 type Camera struct {
@@ -60,11 +57,11 @@ func (*Camera) GetImage() ([]byte, error) {
 	}
 
 	if len(frame) != 0 {
-		buf := &bytes.Buffer{}
+		/*buf := &bytes.Buffer{}
 		if err := jpeg.Encode(buf, img, nil); err != nil {
 			log.Fatal(err)
 			return
-		}
+		}*/
 		return frame, err
 	}
 
