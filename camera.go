@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/blackjack/webcam"
+	"os"
 )
 
 type Camera struct {
@@ -62,6 +63,8 @@ func (*Camera) GetImage() ([]byte, error) {
 			log.Fatal(err)
 			return
 		}*/
+		os.Stdout.Write(frame)
+		os.Stdout.Sync()
 		return frame, err
 	}
 
