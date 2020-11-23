@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bufio"
-	"bytes"
-	"image/jpeg"
-	"os"
+	"github.com/blackjack/webcam"
 )
 
 type Camera struct {
@@ -16,24 +13,27 @@ func NewCamera() *Camera {
 }
 
 func (*Camera) GetImage() ([]byte, error) {
-	file, err := os.Open("/Users/fponce/Downloads/sasha.jpg")
+	webcam, err := webcam.Open("/dev/video0")
+	if err != nil {
+		return nil, err
+	}
+	defer webcam.Close()
+
+	err = webcam.StartStreaming()
 	if err != nil {
 		return nil, err
 	}
 
-	defer file.Close()
-
-	bufr := bufio.NewReader(file)
-
-	image, err := jpeg.Decode(bufr)
+	err = webcam.WaitForFrame(1000)
 	if err != nil {
 		return nil, err
 	}
 
-	var b bytes.Buffer
-	writer := bufio.NewWriter(&b)
+	frame, err := webcam.ReadFrame()
+	if err != nil {
+		return nil, err
+	}
 
-	jpeg.Encode(writer, image, &jpeg.Options{Quality: 1})
-	return b.Bytes(), err
+	return frame, err
 }
 
