@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"errors"
 	"github.com/blackjack/webcam"
+	"io/ioutil"
+	"os"
 )
 
 type Camera struct {
@@ -39,6 +41,8 @@ func (*Camera) GetImage() ([]byte, error) {
 	if len(frame) != 0 {
 		var buf bytes.Buffer
 		buf.Write(frame)
+
+		ioutil.WriteFile("frame.jpg", buf.Bytes(), 0)
 
 		return buf.Bytes(), err
 	}
