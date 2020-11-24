@@ -26,7 +26,7 @@ type Config struct {
 
 	Alert struct {
 		Sound struct {
-			File string `yaml:"file"`
+			URI string `yaml:"uri"`
 		} `yaml:"sound"`
 	} `yaml:"alert"`
 
@@ -61,7 +61,7 @@ func LoadConfig() (Config, error) {
 
 func (c Config) CreateAlerter() (Alerter, error) {
 	if c.Drivers.Alert == "sound" {
-		return NewAudioAlerter(c.Alert.Sound.File), nil
+		return NewAudioAlerter(c.Alert.Sound.URI), nil
 	} else {
 		return nil, errors.New("unsupported alert driver")
 	}

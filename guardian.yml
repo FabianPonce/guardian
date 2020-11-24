@@ -7,7 +7,7 @@ camera:
 
 alert:
   sound:
-    file: /Users/fponce/Downloads/dog3.wav
+    uri: /Users/fponce/Downloads/dog3.wav
 
 classification:
   rekognition:

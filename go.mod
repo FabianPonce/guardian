@@ -8,6 +8,7 @@ require (
 	github.com/corona10/goimagehash v1.0.3
 	github.com/creasty/defaults v1.5.1
 	github.com/faiface/beep v1.0.2
+	github.com/utahta/go-openuri v0.1.0
 	gocv.io/x/gocv v0.25.0
 	gopkg.in/yaml.v2 v2.2.8
 )

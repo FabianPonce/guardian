@@ -1,29 +1,41 @@
 package main
 
 import (
+	"bytes"
+	"github.com/utahta/go-openuri"
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/wav"
-	"os"
+	"io/ioutil"
 	"time"
 )
 
 type AudioAlerter struct {
-	path string
+	uri string
 }
 
-func NewAudioAlerter(path string) *AudioAlerter {
+func NewAudioAlerter(uri string) *AudioAlerter {
 	return &AudioAlerter{
-		path: path,
+		uri: uri,
 	}
 }
 
 func (a *AudioAlerter) Alert() error {
-	f, err := os.Open(a.path)
+	f, err := openuri.Open(a.uri)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	// data must be copied into a new buffer otherwise it will be lost as the sound plays but this function exists
+	// due to the deferred f.Close()
+	dat, err := ioutil.ReadAll(f)
 	if err != nil {
 		return err
 	}
 
-	streamer, format, err := wav.Decode(f)
+	buf := bytes.NewBuffer(dat)
+
+	streamer, format, err := wav.Decode(buf)
 	if err != nil {
 		return err
 	}
