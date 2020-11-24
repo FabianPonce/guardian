@@ -53,7 +53,8 @@ func (a *AudioAlerter) Alert() error {
 	if err != nil {
 		return err
 	}
-	
+
+	a.playing = true
 	speaker.Play(beep.Seq(streamer, beep.Callback(func() {
 		a.playing = false
 	})))
