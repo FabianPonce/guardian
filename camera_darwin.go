@@ -8,14 +8,17 @@ import (
 
 type CameraImpl struct {
 	webcam *gocv.VideoCapture
+	options CameraOptions
 }
 
-func NewCamera() *CameraImpl {
-	return &CameraImpl{}
+func NewCamera(options CameraOptions) Camera {
+	return &CameraImpl{
+		options: options,
+	}
 }
 
-func (c *CameraImpl) Configure() error {
-	webcam, err := gocv.OpenVideoCapture(1)
+func (c *CameraImpl) Open() error {
+	webcam, err := gocv.OpenVideoCapture(c.options.DeviceIndex)
 	if err != nil {
 		return err
 	}

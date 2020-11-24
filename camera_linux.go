@@ -8,14 +8,17 @@ import (
 
 type CameraImpl struct {
 	webcam *webcam.Webcam
+	options CameraOptions
 }
 
-func NewCamera() *CameraImpl {
-	return &CameraImpl{}
+func NewCamera(options CameraOptions) Camera {
+	return &CameraImpl{
+		options: options,
+	}
 }
 
-func (c *CameraImpl) Configure() error {
-	webcam, err := webcam.Open("/dev/video0")
+func (c *CameraImpl) Open() error {
+	webcam, err := webcam.Open(fmt.Printf("/dev/video%v", c.options.DeviceIndex))
 	if err != nil {
 		return err
 	}

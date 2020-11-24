@@ -4,27 +4,33 @@ import (
 	"bytes"
 	"fmt"
 	"image/jpeg"
+	"strings"
 	"time"
 	"github.com/corona10/goimagehash"
 )
 
-const(
-	MinimumDistanceMotionDetectionThreshold = 15
-)
-
 type Guardian struct {
-	Camera *CameraImpl
-	Classifier *Classifier
+	camera      Camera
+	classifier  Classifier
 	initialized bool
-
-	lastHash *goimagehash.ImageHash
+	alerter     Alerter
+	criteria    []ConfigMatchingCriteria
+	lastHash    *goimagehash.ImageHash
+	options     GuardianOptions
 }
 
-func NewGuardian() *Guardian {
+type GuardianOptions struct {
+	MotionDetectionThreshold int
+}
+
+func NewGuardian(camera Camera, classifier Classifier, alerter Alerter, criteria []ConfigMatchingCriteria, options GuardianOptions) *Guardian {
 	return &Guardian{
-		Camera: NewCamera(),
-		Classifier: NewClassifier(),
+		camera:      camera,
+		classifier:  classifier,
 		initialized: false,
+		alerter:     alerter,
+		criteria:    criteria,
+		options: 	 options,
 	}
 }
 
@@ -42,13 +48,7 @@ func imageHashFromBytes(b []byte) (*goimagehash.ImageHash, error) {
 
 func (g *Guardian) Run() {
 	for true {
-		if !g.initialized {
-			g.Camera.Configure()
-			g.initialized = true
-			defer g.Camera.Close()
-		}
-
-		img, err := g.Camera.GetImage()
+		img, err := g.camera.GetImage()
 		if err != nil {
 			fmt.Println(err)
 			continue
@@ -60,7 +60,7 @@ func (g *Guardian) Run() {
 			distance, _ = g.lastHash.Distance(currentHash)
 		}
 
-		if g.lastHash != nil && distance < MinimumDistanceMotionDetectionThreshold {
+		if g.lastHash != nil && distance < g.options.MotionDetectionThreshold {
 			continue
 		}
 		g.lastHash = currentHash
@@ -69,22 +69,36 @@ func (g *Guardian) Run() {
 
 		start := time.Now()
 
-		meetsCriteria, err := g.classify(img)
+		labels, err := g.classifier.GetLabels(img)
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
 
-		if meetsCriteria {
-			fmt.Println("Found dog!")
+		if g.meetsCriteria(labels) {
+			fmt.Println("Search criteria met, triggering alert.")
+			err := g.alerter.Alert()
+			if err != nil {
+				fmt.Println("Unable to alert.")
+				fmt.Println(err)
+			}
 		} else {
-			fmt.Println("No dog.")
+			fmt.Println("No criteria matched.")
 		}
 
-		fmt.Printf("Classification done in %v ms.", time.Now().Sub(start).Milliseconds())
+		fmt.Printf("Classification done in %v ms.\n", time.Now().Sub(start).Milliseconds())
 	}
 }
 
-func (g *Guardian) classify(image []byte) (bool, error) {
-	return g.Classifier.ContainsDog(image)
+func (g *Guardian) meetsCriteria(labels []MatchedLabel) bool {
+	for _, search := range g.criteria {
+		for _, label := range labels {
+			if strings.Compare(strings.ToLower(search.Label), strings.ToLower(label.Label)) == 0 &&
+				label.Confidence >= search.Threshold {
+				return true
+			}
+		}
+	}
+
+	return false
 }

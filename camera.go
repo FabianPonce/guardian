@@ -1,7 +1,11 @@
 package main
 
 type Camera interface {
-	Configure() error
+	Open() error
 	GetImage() ([]byte, error)
 	Close() error
+}
+
+type CameraOptions struct {
+	DeviceIndex int
 }

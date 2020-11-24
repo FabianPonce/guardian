@@ -1,0 +1,21 @@
+drivers:
+  alert: sound
+  classification: rekognition
+
+camera:
+  device_index: 1
+
+alert:
+  sound:
+    file: /Users/fponce/Downloads/dog3.wav
+
+classification:
+  rekognition:
+    max_labels: 50
+    min_confidence: 10
+
+guardian:
+  motion_threshold: 15
+  criteria:
+    - label: Person
+      threshold: 50
