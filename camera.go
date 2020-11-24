@@ -5,7 +5,6 @@ import (
 	"errors"
 	"github.com/blackjack/webcam"
 	"io/ioutil"
-	"os"
 )
 
 type Camera struct {
