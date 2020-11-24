@@ -1,4 +1,4 @@
-package main
+package camera
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 )
 
 type CameraImpl struct {
-	webcam *webcam.Webcam
+	webcam  *webcam.Webcam
 	options CameraOptions
 }
 

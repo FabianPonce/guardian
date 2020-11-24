@@ -1,4 +1,4 @@
-package main
+package camera
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 )
 
 type CameraImpl struct {
-	webcam *gocv.VideoCapture
+	webcam  *gocv.VideoCapture
 	options CameraOptions
 }
 

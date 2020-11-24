@@ -1,10 +1,10 @@
-package main
+package alerter
 
 import (
 	"bytes"
-	"github.com/utahta/go-openuri"
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/wav"
+	"github.com/utahta/go-openuri"
 	"io/ioutil"
 	"time"
 )

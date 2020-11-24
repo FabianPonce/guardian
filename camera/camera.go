@@ -1,4 +1,4 @@
-package main
+package camera
 
 type Camera interface {
 	Open() error

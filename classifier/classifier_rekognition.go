@@ -1,4 +1,4 @@
-package main
+package classifier
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
@@ -8,7 +8,7 @@ import (
 
 type RekognitionClassifier struct {
 	session *session.Session
-	client *rekognition.Rekognition
+	client  *rekognition.Rekognition
 	options RekognitionOptions
 }
 

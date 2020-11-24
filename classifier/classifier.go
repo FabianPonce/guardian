@@ -1,4 +1,4 @@
-package main
+package classifier
 
 type MatchedLabel struct {
 	Label string `yaml:"label"`

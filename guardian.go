@@ -3,17 +3,20 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/corona10/goimagehash"
+	alerter2 "github.com/fabianponce/guardian/alerter"
+	camera2 "github.com/fabianponce/guardian/camera"
+	"github.com/fabianponce/guardian/classifier"
 	"image/jpeg"
 	"strings"
 	"time"
-	"github.com/corona10/goimagehash"
 )
 
 type Guardian struct {
-	camera      Camera
-	classifier  Classifier
+	camera      camera2.Camera
+	classifier  classifier.Classifier
 	initialized bool
-	alerter     Alerter
+	alerter     alerter2.Alerter
 	criteria    []ConfigMatchingCriteria
 	lastHash    *goimagehash.ImageHash
 	options     GuardianOptions
@@ -23,7 +26,7 @@ type GuardianOptions struct {
 	MotionDetectionThreshold int
 }
 
-func NewGuardian(camera Camera, classifier Classifier, alerter Alerter, criteria []ConfigMatchingCriteria, options GuardianOptions) *Guardian {
+func NewGuardian(camera camera2.Camera, classifier classifier.Classifier, alerter alerter2.Alerter, criteria []ConfigMatchingCriteria, options GuardianOptions) *Guardian {
 	return &Guardian{
 		camera:      camera,
 		classifier:  classifier,
@@ -90,7 +93,7 @@ func (g *Guardian) Run() {
 	}
 }
 
-func (g *Guardian) meetsCriteria(labels []MatchedLabel) bool {
+func (g *Guardian) meetsCriteria(labels []classifier.MatchedLabel) bool {
 	for _, search := range g.criteria {
 		for _, label := range labels {
 			if strings.Compare(strings.ToLower(search.Label), strings.ToLower(label.Label)) == 0 &&

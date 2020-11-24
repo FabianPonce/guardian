@@ -2,9 +2,12 @@ package main
 
 import (
 	"errors"
+	"github.com/creasty/defaults"
+	"github.com/fabianponce/guardian/alerter"
+	"github.com/fabianponce/guardian/camera"
+	"github.com/fabianponce/guardian/classifier"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"github.com/creasty/defaults"
 )
 
 type Config struct {
@@ -59,21 +62,21 @@ func LoadConfig() (Config, error) {
 	return config, nil
 }
 
-func (c Config) CreateAlerter() (Alerter, error) {
+func (c Config) CreateAlerter() (alerter.Alerter, error) {
 	if c.Drivers.Alert == "sound" {
-		return NewAudioAlerter(c.Alert.Sound.URI), nil
+		return alerter.NewAudioAlerter(c.Alert.Sound.URI), nil
 	} else {
 		return nil, errors.New("unsupported alert driver")
 	}
 }
 
-func (c Config) CreateCamera() Camera {
-	return NewCamera(CameraOptions{DeviceIndex: c.Camera.DeviceIndex})
+func (c Config) CreateCamera() camera.Camera {
+	return camera.NewCamera(camera.CameraOptions{DeviceIndex: c.Camera.DeviceIndex})
 }
 
-func (c Config) CreateClassifier() (Classifier, error) {
+func (c Config) CreateClassifier() (classifier.Classifier, error) {
 	if c.Drivers.Classification == "rekognition" {
-		return NewRekognitionClassifier(RekognitionOptions{
+		return classifier.NewRekognitionClassifier(classifier.RekognitionOptions{
 			MinConfidence: c.Classification.Rekognition.MinConfidence,
 			MaxLabels:     c.Classification.Rekognition.MaxLabels,
 		}), nil
