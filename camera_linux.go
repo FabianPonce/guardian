@@ -4,35 +4,38 @@ import (
 	"bytes"
 	"errors"
 	"github.com/blackjack/webcam"
-	"io/ioutil"
 )
 
 type CameraImpl struct {
-
+	webcam *webcam.Webcam
 }
 
 func NewCamera() *CameraImpl {
 	return &CameraImpl{}
 }
 
-func (*CameraImpl) GetImage() ([]byte, error) {
+func (c *CameraImpl) Configure() error {
 	webcam, err := webcam.Open("/dev/video0")
 	if err != nil {
-		return nil, err
+		return err
 	}
-	defer webcam.Close()
+	c.webcam = webcam
 
 	err = webcam.StartStreaming()
+	return err
+}
+
+func (c *CameraImpl) Close() error {
+	return c.webcam.Close()
+}
+
+func (c *CameraImpl) GetImage() ([]byte, error) {
+	err = c.webcam.WaitForFrame(1000)
 	if err != nil {
 		return nil, err
 	}
 
-	err = webcam.WaitForFrame(1000)
-	if err != nil {
-		return nil, err
-	}
-
-	frame, err := webcam.ReadFrame()
+	frame, err := c.webcam.ReadFrame()
 	if err != nil {
 		return nil, err
 	}
@@ -40,9 +43,7 @@ func (*CameraImpl) GetImage() ([]byte, error) {
 	if len(frame) != 0 {
 		var buf bytes.Buffer
 		buf.Write(frame)
-
-		ioutil.WriteFile("frame.jpg", buf.Bytes(), 644)
-
+		
 		return buf.Bytes(), err
 	}
 

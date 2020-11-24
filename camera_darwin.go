@@ -7,21 +7,30 @@ import (
 )
 
 type CameraImpl struct {
-
+	webcam *gocv.VideoCapture
 }
 
 func NewCamera() *CameraImpl {
 	return &CameraImpl{}
 }
 
-func (*CameraImpl) GetImage() ([]byte, error) {
+func (c *CameraImpl) Configure() error {
 	webcam, err := gocv.OpenVideoCapture(1)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
+	c.webcam = webcam
+	return nil
+}
+
+func (c *CameraImpl) Close() error {
+	return c.Close()
+}
+
+func (c *CameraImpl) GetImage() ([]byte, error) {
 	img := gocv.NewMat()
-	webcam.Read(&img)
+	c.webcam.Read(&img)
 
 	image, err := img.ToImage()
 	if err != nil {
