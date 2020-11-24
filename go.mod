@@ -1,4 +1,4 @@
-module github.com/fabianponce/dog-boundary-enforcer
+module github.com/fabianponce/guardian
 
 go 1.14
 
