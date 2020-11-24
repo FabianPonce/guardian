@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/blackjack/webcam"
+	"image/jpeg"
+	"log"
 	"os"
 )
 
@@ -42,6 +45,8 @@ func (*Camera) GetImage() ([]byte, error) {
 		fmt.Printf("ID:%08x %-32s  Min: %4d  Max: %5d\n", id, c.Name, c.Min, c.Max)
 	}
 
+	webcam.SetImageFormat(0x4745504a, 3280, 2464)
+
 	err = webcam.StartStreaming()
 	if err != nil {
 		return nil, err
@@ -58,11 +63,12 @@ func (*Camera) GetImage() ([]byte, error) {
 	}
 
 	if len(frame) != 0 {
-		/*buf := &bytes.Buffer{}
+		img := image.
+		buf := &bytes.Buffer{}
 		if err := jpeg.Encode(buf, img, nil); err != nil {
 			log.Fatal(err)
 			return
-		}*/
+		}
 		os.Stdout.Write(frame)
 		os.Stdout.Sync()
 		return frame, err
