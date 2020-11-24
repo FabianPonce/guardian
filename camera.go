@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"github.com/blackjack/webcam"
 )
@@ -36,7 +37,10 @@ func (*Camera) GetImage() ([]byte, error) {
 	}
 
 	if len(frame) != 0 {
-		return frame, err
+		var buf bytes.Buffer
+		buf.Write(frame)
+
+		return buf.Bytes(), err
 	}
 
 	return nil, errors.New("No frame")
