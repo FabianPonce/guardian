@@ -46,7 +46,7 @@ func (*Camera) GetImage() ([]byte, error) {
 		fmt.Printf("ID:%08x %-32s  Min: %4d  Max: %5d\n", id, c.Name, c.Min, c.Max)
 	}
 
-	webcam.SetImageFormat(0x4745504a, 3280, 2464)
+	//webcam.SetImageFormat(0x4745504a, uint32(3280), uint32(2464))
 
 	err = webcam.StartStreaming()
 	if err != nil {
