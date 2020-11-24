@@ -30,7 +30,7 @@ func (c *CameraImpl) Close() error {
 }
 
 func (c *CameraImpl) GetImage() ([]byte, error) {
-	err = c.webcam.WaitForFrame(1000)
+	err := c.webcam.WaitForFrame(1000)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (c *CameraImpl) GetImage() ([]byte, error) {
 	if len(frame) != 0 {
 		var buf bytes.Buffer
 		buf.Write(frame)
-		
+
 		return buf.Bytes(), err
 	}
 
