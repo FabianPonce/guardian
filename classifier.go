@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/rekognition"
@@ -46,6 +47,7 @@ func (c *Classifier) ContainsDog(image []byte) (bool, error) {
 
 	for _, label := range labels {
 		n := *label.Name
+		fmt.Printf("Label: %v | Probability: %v\n", n, *label.Confidence)
 		if 	n == "Dog" ||
 			n == "Canine" ||
 			n == "Pet" ||
