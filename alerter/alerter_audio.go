@@ -31,6 +31,7 @@ func (a *AudioAlerter) Alert() error {
 
 	f, err := openuri.Open(a.uri)
 	if err != nil {
+		fmt.Printf("Unable to open %v\n", a.uri)
 		return err
 	}
 	defer f.Close()
