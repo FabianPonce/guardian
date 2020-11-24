@@ -2,6 +2,8 @@ package alerter
 
 import (
 	"bytes"
+	"fmt"
+	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/wav"
 	"github.com/utahta/go-openuri"
@@ -11,15 +13,22 @@ import (
 
 type AudioAlerter struct {
 	uri string
+	playing bool
 }
 
 func NewAudioAlerter(uri string) *AudioAlerter {
 	return &AudioAlerter{
 		uri: uri,
+		playing: false,
 	}
 }
 
 func (a *AudioAlerter) Alert() error {
+	if a.playing {
+		fmt.Println("Skipping alert due to already playing sound.")
+		return nil
+	}
+
 	f, err := openuri.Open(a.uri)
 	if err != nil {
 		return err
@@ -44,7 +53,9 @@ func (a *AudioAlerter) Alert() error {
 	if err != nil {
 		return err
 	}
-
-	speaker.Play(streamer)
+	
+	speaker.Play(beep.Seq(streamer, beep.Callback(func() {
+		a.playing = false
+	})))
 	return nil
 }
