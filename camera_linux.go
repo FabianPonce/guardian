@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"github.com/blackjack/webcam"
 )
 
