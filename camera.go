@@ -1,12 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"github.com/blackjack/webcam"
-	"image/jpeg"
-	"log"
 	"os"
 )
 
@@ -63,12 +60,11 @@ func (*Camera) GetImage() ([]byte, error) {
 	}
 
 	if len(frame) != 0 {
-		img := image.
-		buf := &bytes.Buffer{}
+		/*buf := &bytes.Buffer{}
 		if err := jpeg.Encode(buf, img, nil); err != nil {
 			log.Fatal(err)
 			return
-		}
+		}*/
 		os.Stdout.Write(frame)
 		os.Stdout.Sync()
 		return frame, err
