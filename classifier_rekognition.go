@@ -18,7 +18,10 @@ type RekognitionOptions struct {
 }
 
 func NewRekognitionClassifier(options RekognitionOptions) Classifier {
-	s := session.New()
+	s, _ := session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	})
+
 	return &RekognitionClassifier{
 		session: s,
 		client: rekognition.New(s),
