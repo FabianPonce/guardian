@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/alecthomas/units"
 	"time"
 )
 
@@ -14,6 +15,13 @@ func main() {
 	image, err := camera.GetImage()
 	if err != nil {
 		panic(err)
+	}
+
+	if units.MetricBytes(len(image)) > 5 * units.Megabyte {
+		image, err = reduceImageSize(image)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	isDog, err := classifier.ContainsDog(image)
