@@ -42,7 +42,7 @@ func (*Camera) GetImage() ([]byte, error) {
 		var buf bytes.Buffer
 		buf.Write(frame)
 
-		ioutil.WriteFile("frame.jpg", buf.Bytes(), 0)
+		ioutil.WriteFile("frame.jpg", buf.Bytes(), 644)
 
 		return buf.Bytes(), err
 	}
