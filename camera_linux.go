@@ -19,7 +19,7 @@ func NewCamera(options CameraOptions) Camera {
 }
 
 func (c *CameraImpl) Open() error {
-	webcam, err := webcam.Open(fmt.Printf("/dev/video%v", c.options.DeviceIndex))
+	webcam, err := webcam.Open(fmt.Sprintf("/dev/video%v", c.options.DeviceIndex))
 	if err != nil {
 		return err
 	}
