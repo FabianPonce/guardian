@@ -1,14 +1,8 @@
 package alerter
 
 import (
-	"bytes"
-	"fmt"
-	"github.com/faiface/beep"
-	"github.com/faiface/beep/speaker"
-	"github.com/faiface/beep/wav"
-	"github.com/utahta/go-openuri"
-	"io/ioutil"
-	"time"
+	"github.com/padster/go-sound/output"
+	"github.com/padster/go-sound/sounds"
 )
 
 type AudioAlerter struct {
@@ -24,40 +18,7 @@ func NewAudioAlerter(uri string) *AudioAlerter {
 }
 
 func (a *AudioAlerter) Alert() error {
-	if a.playing {
-		fmt.Println("Skipping alert due to already playing sound.")
-		return nil
-	}
-
-	f, err := openuri.Open(a.uri)
-	if err != nil {
-		fmt.Printf("Unable to open %v\n", a.uri)
-		return err
-	}
-	defer f.Close()
-
-	// data must be copied into a new buffer otherwise it will be lost as the sound plays but this function exists
-	// due to the deferred f.Close()
-	dat, err := ioutil.ReadAll(f)
-	if err != nil {
-		return err
-	}
-
-	buf := bytes.NewBuffer(dat)
-
-	streamer, format, err := wav.Decode(buf)
-	if err != nil {
-		return err
-	}
-
-	err = speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-	if err != nil {
-		return err
-	}
-
-	a.playing = true
-	speaker.Play(beep.Seq(streamer, beep.Callback(func() {
-		a.playing = false
-	})))
+	wav := sounds.LoadWavAsSound(a.uri, 0)
+	output.Play(wav)
 	return nil
 }
